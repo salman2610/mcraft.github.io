@@ -1,149 +1,336 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>P. Salmanul Faris — HackerCraft: Portfolio World (v2.0)</title>
-  <meta name="description" content="HackerCraft — Minecraft-inspired interactive portfolio & cybersecurity game-UI.">
-  <link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⛏️</text></svg>">
-  <meta name="color-scheme" content="dark light">
-  
-  <!-- GSAP Full + plugins -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Flip.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Observer.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/EasePack.min.js"></script>
-  
-  <!-- CSS -->
-  <link rel="stylesheet" href="css/hackercraft.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hackercraft - Cybersecurity Portfolio</title>
+    <meta name="description" content="A Minecraft-style interactive portfolio for a cybersecurity/full-stack engineer">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Flip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Observer.min.js"></script>
 </head>
 <body>
-  <div class="app" id="appRoot">
-    <!-- ===== TITLE SCREEN (MC Panorama Style) ===== -->
-    <div class="title-screen" id="titleScreen" aria-hidden="false">
-      <div class="panorama">
-        <div class="panorama-layer" style="background-image: url('assets/grass.png');"></div>
-        <div class="panorama-layer layer-2" style="background-image: url('assets/stone.png');"></div>
-        <div class="panorama-layer layer-3" style="background-image: url('assets/sand.png');"></div>
-        <div class="panorama-layer layer-4" style="background-image: url('assets/nether_netherrack.png');"></div>
-        <div class="panorama-layer layer-5" style="background-image: url('assets/end_stars.png');"></div>
-      </div>
-      <div class="title-card" role="dialog" aria-label="Title menu">
-        <div class="logo mc-pixel">HackerCraft</div>
-        <div class="subtitle mc-pixel">P. Salmanul Faris — Cybersecurity Explorer</div>
-        <div class="menu-buttons">
-          <button class="mc-btn" id="btnSingleplayer">Singleplayer</button>
-          <button class="mc-btn" id="btnProjects">Projects (Multiplayer)</button>
-          <button class="mc-btn" id="btnSkills">Skills</button>
-          <button class="mc-btn" id="btnOptions">Options</button>
-          <button class="mc-btn" id="btnQuit">Quit</button>
+    <!-- README stub for GitHub Pages -->
+    <!-- 
+    ============================================
+    HACKERCRAFT PORTFOLIO - DEPLOYMENT GUIDE
+    ============================================
+    1. Upload all files to your GitHub repository
+    2. Enable GitHub Pages in Settings → Pages
+    3. Set source to 'main' branch, root folder
+    4. Your site will be live at: https://[username].github.io
+    
+    Required assets folder structure:
+    /assets/
+        sand.png, forest.png, cave.png, nether_netherrack.png
+        end_stars.png, sky.png, minecraftfont.woff
+        heart_full.png, heart_half.png, heart_empty.png
+        crosshair.png, hotbar_slot.png
+        ui_click.wav, block_break.wav, xp_gain.wav
+        achievement.wav, open_inventory.wav, hover.wav
+        pause_menu.wav, page_switch.wav
+        resume.pdf
+    ============================================
+    -->
+    
+    <!-- Title Screen -->
+    <div id="titleScreen" class="screen active">
+        <div class="parallax-panorama"></div>
+        <div class="title-content">
+            <h1 class="minecraft-logo">HACKERCRAFT</h1>
+            <div class="title-buttons">
+                <button class="btn-pixel btn-large" data-action="start" aria-label="Start Game">
+                    <span class="btn-text">START WORLD</span>
+                </button>
+                <button class="btn-pixel" data-action="projects" aria-label="View Projects">
+                    <span class="btn-text">PROJECTS</span>
+                </button>
+                <button class="btn-pixel" data-action="skills" aria-label="View Skills">
+                    <span class="btn-text">SKILLS</span>
+                </button>
+                <button class="btn-pixel" data-action="options" aria-label="Open Options">
+                    <span class="btn-text">OPTIONS</span>
+                </button>
+                <button class="btn-pixel" data-action="resume" aria-label="Download Resume">
+                    <span class="btn-text">RESUME</span>
+                </button>
+            </div>
+            <div class="title-footer">
+                <p>Portfolio of a Cybersecurity & Full-Stack Engineer</p>
+                <p class="controls-hint">Press ESC for menu • 1-9 for hotbar • WASD to move</p>
+            </div>
         </div>
-        <div class="version mc-pixel">v2.0 — Bedrock Edition Mod</div>
-      </div>
-      <div class="title-hint mc-pixel">Press Enter to Start Mining Your Portfolio</div>
     </div>
 
-    <!-- ===== GAME SHELL ===== -->
-    <div class="game-shell" id="gameShell" aria-hidden="true">
-      <!-- Top Bar (MC Style) -->
-      <div class="topbar mc-pixel">
-        <div class="brand mc-pixel">HackerCraft — Overworld Loaded</div>
-        <div class="status mc-pixel">Health: Full | XP: <span id="xpLevel">6</span></div>
-      </div>
-
-      <!-- World Biomes -->
-      <main class="world mc-pixel" id="world">
-        <!-- Spawn -->
-        <section id="spawn" class="biome" data-biome="spawn">
-          <h1 class="biome-title mc-pixel">Spawn Biome</h1>
-          <p class="biome-desc">Welcome, miner. Break blocks to uncover facts about P. Salmanul Faris.</p>
-          <div id="blockBreaker" class="mini-game-grid"></div>
-        </section>
-
-        <!-- Skills Cave -->
-        <section id="skills" class="biome" data-biome="cave">
-          <h1 class="biome-title mc-pixel">Skills Cave</h1>
-          <div id="parkourArena" class="parkour-game"></div>
-          <button class="mc-btn" onclick="HackerCraft.startParkour()">Start Parkour Challenge</button>
-        </section>
-
-        <!-- Projects Desert -->
-        <section id="projects" class="biome" data-biome="desert">
-          <h1 class="biome-title mc-pixel">Projects Desert</h1>
-          <div class="project-grid">
-            <!-- Dynamic projects via JS -->
-          </div>
-        </section>
-
-        <!-- Nether Red Team Lab -->
-        <section id="nether" class="biome" data-biome="nether">
-          <h1 class="biome-title mc-pixel">Nether Red Team Lab</h1>
-          <p class="biome-desc">Simulate breaches in the fiery depths.</p>
-          <!-- Add red team mini-game here if expanded -->
-        </section>
-
-        <!-- Sky Contact -->
-        <section id="contact" class="biome" data-biome="sky">
-          <h1 class="biome-title mc-pixel">Sky Contact Platform</h1>
-          <p class="biome-desc">Elytra to connections: <a href="mailto:salmanulfariss642@gmail.com">Email Portal</a></p>
-        </section>
-
-        <!-- End Portal Resume -->
-        <section id="end" class="biome" data-biome="end">
-          <h1 class="biome-title mc-pixel">End Portal — Resume Vault</h1>
-          <a href="assets/resume.pdf" download class="mc-btn">Download Resume (Ender Pearl)</a>
-        </section>
-      </main>
-
-      <!-- MC HUD -->
-      <div class="hud mc-pixel" id="hud">
-        <div class="health-bar">
-          <div class="hearts" id="hearts"><!-- 20 hearts via JS --></div>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="screen">
+        <div class="loading-content">
+            <h2 class="minecraft-font">LOADING HACKERCRAFT</h2>
+            <div class="loading-bar-container">
+                <div class="loading-bar"></div>
+                <div class="loading-bar-progress"></div>
+            </div>
+            <p class="loading-status">Initializing security protocols...</p>
+            <div class="loading-tips">
+                <p>Tip: Break blocks in the Forest to learn about me</p>
+                <p>Tip: Complete the parkour course to earn XP</p>
+            </div>
         </div>
-        <div class="xp-bar">
-          <div class="xp-fill" id="xpFill"></div>
-        </div>
-        <div class="hotbar" id="hotbar"><!-- 9 slots --></div>
-      </div>
-
-      <div class="crosshair mc-pixel" id="crosshair">+</div>
-
-      <!-- Pause Menu (Exact MC Style) -->
-      <div class="pause-menu mc-pixel" id="pauseMenu">
-        <div class="pause-panel">
-          <h2>Game Menu</h2>
-          <button class="mc-btn" id="resumeBtn">Resume Game</button>
-          <button class="mc-btn" onclick="HackerCraft.openAchievements()">Achievements</button>
-          <button class="mc-btn" onclick="HackerCraft.openInventory()">Inventory</button>
-          <button class="mc-btn" onclick="HackerCraft.saveGame()">Save & Quit</button>
-        </div>
-      </div>
-
-      <!-- Inventory (MC 3x3 Crafting + 4x9 Grid) -->
-      <div class="inventory-modal mc-pixel" id="inventoryModal">
-        <div class="inv-header">
-          <h3>Crafting</h3>
-          <div class="crafting-grid" id="craftingGrid"><!-- 3x3 --></div>
-          <div class="output-slot" id="outputSlot"></div>
-        </div>
-        <div class="inv-grid" id="invGrid"><!-- 36 slots --></div>
-        <button class="mc-btn close-inv">Close</button>
-      </div>
-
-      <!-- Achievements Tree Modal -->
-      <div class="achievements-modal mc-pixel" id="achievementsModal">
-        <h3>Achievement Tree</h3>
-        <div id="achTree"><!-- Dynamic tree --></div>
-        <button class="mc-btn close-ach">Close</button>
-      </div>
-
-      <!-- Toasts -->
-      <div class="toast-container" id="toastContainer"></div>
     </div>
-  </div>
 
-  <script src="js/hackercraft-engine.js"></script>
+    <!-- Game World -->
+    <div id="gameWorld" class="screen">
+        <!-- Crosshair -->
+        <div id="crosshair" class="crosshair"></div>
+        
+        <!-- Biome Sections -->
+        <div id="biomeContainer" class="biome-container">
+            <!-- Forest - About Section -->
+            <section id="forestBiome" class="biome active" data-biome="forest" aria-label="About Section">
+                <div class="biome-background forest-bg"></div>
+                <div class="biome-content">
+                    <h2 class="biome-title">FOREST - ABOUT</h2>
+                    <div class="block-game">
+                        <div class="block" data-fact="Cybersecurity Researcher & Full-Stack Developer">
+                            <div class="block-text">CYBER</div>
+                        </div>
+                        <div class="block" data-fact="Specialized in Web Security, Network Defense & Cloud Architecture">
+                            <div class="block-text">SECURITY</div>
+                        </div>
+                        <div class="block" data-fact="Open Source Contributor & CTF Player">
+                            <div class="block-text">OPEN</div>
+                        </div>
+                        <div class="block" data-fact="Building secure, scalable systems with modern stacks">
+                            <div class="block-text">BUILD</div>
+                        </div>
+                    </div>
+                    <div class="about-content">
+                        <div class="pixel-panel">
+                            <h3>BIOGRAPHY</h3>
+                            <p>Cybersecurity professional with expertise in full-stack development, penetration testing, and secure system architecture. Passionate about building robust systems and researching vulnerabilities.</p>
+                        </div>
+                        <div class="pixel-panel">
+                            <h3>EDUCATION & RESEARCH</h3>
+                            <p>Advanced studies in cybersecurity, cryptography, and distributed systems. Active contributor to security research and open-source projects.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Cave - Skills Section -->
+            <section id="caveBiome" class="biome" data-biome="cave" aria-label="Skills Section">
+                <div class="biome-background cave-bg"></div>
+                <div class="biome-content">
+                    <h2 class="biome-title">CAVE - SKILLS</h2>
+                    <div class="parkour-game">
+                        <div class="parkour-platform start"></div>
+                        <div class="parkour-platform middle"></div>
+                        <div class="parkour-platform middle"></div>
+                        <div class="parkour-platform end"></div>
+                        <div class="parkour-player"></div>
+                    </div>
+                    <div class="skills-grid">
+                        <div class="pixel-panel">
+                            <h3>CYBERSECURITY</h3>
+                            <ul>
+                                <li>Penetration Testing</li>
+                                <li>Vulnerability Assessment</li>
+                                <li>Network Security</li>
+                                <li>Cryptography</li>
+                                <li>Incident Response</li>
+                            </ul>
+                        </div>
+                        <div class="pixel-panel">
+                            <h3>DEVELOPMENT</h3>
+                            <ul>
+                                <li>React/Node.js</li>
+                                <li>Python/Go</li>
+                                <li>Cloud (AWS/Azure)</li>
+                                <li>Docker/Kubernetes</li>
+                                <li>Database Security</li>
+                            </ul>
+                        </div>
+                        <div class="pixel-panel">
+                            <h3>TOOLS</h3>
+                            <ul>
+                                <li>Wireshark/Nmap</li>
+                                <li>Metasploit/Burp Suite</li>
+                                <li>Git/GitHub Actions</li>
+                                <li>SIEM Tools</li>
+                                <li>Security Frameworks</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Desert - Projects Section -->
+            <section id="desertBiome" class="biome" data-biome="desert" aria-label="Projects Section">
+                <div class="biome-background desert-bg"></div>
+                <div class="biome-content">
+                    <h2 class="biome-title">DESERT - PROJECTS</h2>
+                    <div class="crafting-ui">
+                        <div class="crafting-grid">
+                            <div class="crafting-slot" data-item="react"></div>
+                            <div class="crafting-slot" data-item="node"></div>
+                            <div class="crafting-slot" data-item="python"></div>
+                            <div class="crafting-slot" data-item="aws"></div>
+                            <div class="crafting-slot" data-item="docker"></div>
+                            <div class="crafting-slot" data-item="security"></div>
+                            <div class="crafting-slot" data-item="git"></div>
+                            <div class="crafting-slot" data-item="linux"></div>
+                            <div class="crafting-slot" data-item="api"></div>
+                        </div>
+                        <div class="crafting-result">
+                            <div class="result-item"></div>
+                        </div>
+                        <button class="btn-pixel craft-btn">CRAFT</button>
+                    </div>
+                    <div class="projects-grid">
+                        <!-- Project cards will be populated by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sky - Contact Section -->
+            <section id="skyBiome" class="biome" data-biome="sky" aria-label="Contact Section">
+                <div class="biome-background sky-bg"></div>
+                <div class="biome-content">
+                    <h2 class="biome-title">SKY - CONTACT</h2>
+                    <div class="contact-container">
+                        <form id="contactForm" class="pixel-form">
+                            <input type="text" placeholder="Your Name" required aria-label="Your Name">
+                            <input type="email" placeholder="Email" required aria-label="Email Address">
+                            <textarea placeholder="Message" rows="4" required aria-label="Message"></textarea>
+                            <button type="submit" class="btn-pixel">SEND MESSAGE</button>
+                        </form>
+                        <div class="contact-links">
+                            <a href="https://github.com/salman2610" target="_blank" class="contact-link github" aria-label="GitHub Profile">
+                                <span>GitHub</span>
+                            </a>
+                            <a href="https://linkedin.com/in/salman2610" target="_blank" class="contact-link linkedin" aria-label="LinkedIn Profile">
+                                <span>LinkedIn</span>
+                            </a>
+                            <a href="mailto:contact@example.com" class="contact-link email" aria-label="Send Email">
+                                <span>Email</span>
+                            </a>
+                            <button class="contact-link resume" data-action="resume" aria-label="Download Resume">
+                                <span>Resume PDF</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Nether - Red Team Lab -->
+            <section id="netherBiome" class="biome" data-biome="nether" aria-label="Red Team Lab">
+                <div class="biome-background nether-bg"></div>
+                <div class="biome-content">
+                    <h2 class="biome-title">NETHER - RED TEAM LAB</h2>
+                    <div class="writeups-grid">
+                        <div class="pixel-panel writeup">
+                            <h3>Penetration Test Reports</h3>
+                            <p>Detailed security assessments and vulnerability discoveries.</p>
+                        </div>
+                        <div class="pixel-panel writeup">
+                            <h3>Security Research</h3>
+                            <p>Latest findings in web security and network vulnerabilities.</p>
+                        </div>
+                        <div class="pixel-panel writeup">
+                            <h3>CTF Writeups</h3>
+                            <p>Walkthroughs of capture-the-flag challenges and solutions.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Game HUD -->
+        <div id="gameHUD" class="hud">
+            <div class="hud-top">
+                <div class="health-container">
+                    <div class="hearts"></div>
+                    <span class="health-text">10/10</span>
+                </div>
+                <div class="xp-container">
+                    <div class="xp-bar">
+                        <div class="xp-progress"></div>
+                    </div>
+                    <span class="xp-text">Level 1 • 0/100</span>
+                </div>
+            </div>
+            
+            <div class="hotbar">
+                <!-- Hotbar slots will be populated by JS -->
+            </div>
+        </div>
+
+        <!-- Inventory Modal -->
+        <div id="inventoryModal" class="modal" role="dialog" aria-label="Inventory">
+            <div class="modal-content inventory-content">
+                <h2 class="modal-title">INVENTORY</h2>
+                <div class="inventory-grid">
+                    <!-- Inventory items populated by JS -->
+                </div>
+                <button class="btn-pixel close-inventory" aria-label="Close Inventory">CLOSE (ESC)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal" role="dialog" aria-label="Settings">
+        <div class="modal-content settings-content">
+            <h2 class="modal-title">OPTIONS</h2>
+            
+            <div class="setting-group">
+                <label for="masterVolume">MASTER VOLUME</label>
+                <input type="range" id="masterVolume" min="0" max="100" value="50" aria-label="Master Volume">
+                <span class="volume-value">50%</span>
+            </div>
+            
+            <div class="setting-group">
+                <label for="sfxVolume">SFX VOLUME</label>
+                <input type="range" id="sfxVolume" min="0" max="100" value="70" aria-label="SFX Volume">
+                <span class="volume-value">70%</span>
+            </div>
+            
+            <div class="setting-group">
+                <label class="toggle-label">
+                    <input type="checkbox" id="themeToggle" aria-label="Toggle Dark Theme">
+                    <span class="toggle-slider"></span>
+                    DARK THEME
+                </label>
+            </div>
+            
+            <div class="setting-buttons">
+                <button class="btn-pixel save-settings" aria-label="Save Settings">SAVE & CLOSE</button>
+                <button class="btn-pixel reset-progress" aria-label="Reset Progress">RESET PROGRESS</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Achievement Toasts Container -->
+    <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+    <!-- Fallback Content for No JS -->
+    <noscript>
+        <div class="noscript-content">
+            <h1>Hackercraft Portfolio</h1>
+            <p>Please enable JavaScript to experience the interactive portfolio.</p>
+            <div class="fallback-content">
+                <h2>About</h2>
+                <p>Cybersecurity professional specializing in full-stack development and security research.</p>
+                <h2>Skills</h2>
+                <p>Penetration testing, secure development, cloud security, and more.</p>
+                <h2>Contact</h2>
+                <p>Email: contact@example.com | GitHub: salman2610</p>
+                <a href="assets/resume.pdf" class="btn">Download Resume</a>
+            </div>
+        </div>
+    </noscript>
+
+    <script src="js/engine.js"></script>
 </body>
 </html>
